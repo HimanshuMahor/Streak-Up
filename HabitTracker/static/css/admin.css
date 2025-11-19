@@ -1,0 +1,137 @@
+/* Custom Django Admin Styling for Habit Tracker */
+
+#header {
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    color: white;
+}
+
+#branding h1 a {
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.module h2 {
+    background: #27ae60;
+    color: white;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.dashboard-module {
+    border: 1px solid #27ae60;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+}
+
+#content h1 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+a:link, a:visited {
+    color: #27ae60;
+}
+a:hover {
+    color: #2ecc71;
+}
+/* static/css/admin.css */
+/* Custom styles for Habit Tracker Admin */
+
+/* Header and branding */
+#header {
+    background: #2c5aa0;
+    color: white;
+}
+
+#branding h1 {
+    color: white;
+    font-weight: bold;
+}
+
+#site-name a {
+    color: white !important;
+    font-size: 1.5em;
+}
+
+/* Module headers */
+.module h2, .module caption {
+    background: #3a6bb0 !important;
+}
+
+/* Buttons */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #2c5aa0;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+    background: #1a4a80;
+}
+
+/* Links */
+a:link, a:visited {
+    color: #2c5aa0;
+}
+
+a:hover {
+    color: #1a4a80;
+}
+
+/* Sidebar */
+#user-tools {
+    color: #f0f0f0;
+}
+
+#user-tools a:link, #user-tools a:visited {
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#user-tools a:hover {
+    color: #ffd700;
+    border-bottom: 1px solid #ffd700;
+}
+
+/* Table styles */
+#changelist table thead th {
+    background: #3a6bb0;
+}
+
+#changelist table tbody tr:hover {
+    background: gray;
+}
+
+/* Form styles */
+.form-row {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+/* Custom navigation global */
+.nav-global {
+    background: #f8f9fa;
+    padding: 10px;
+    border-bottom: 2px solid #2c5aa0;
+    margin-bottom: 20px;
+}
+
+.nav-global div {
+    font-weight: bold;
+    color: #2c5aa0;
+    text-align: center;
+    font-size: 1.1em;
+}
+/* Responsive improvements */
+@media (max-width: 767px) {
+    #header {
+        padding: 10px;
+    }
+    
+    #site-name {
+        font-size: 1.2em;
+    }
+    
+    .nav-global div {
+        font-size: 0.9em;
+    }
+}

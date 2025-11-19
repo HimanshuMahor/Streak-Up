@@ -1,0 +1,145 @@
+{% extends "habit/base.html" %}
+{% block title %}{{ habit.name }} - HabitTracker{% endblock %}
+
+{% block extra_head %}
+
+<style>
+    .title-head{
+        display: flex;
+        gap:20px;
+        align-items: center;
+    }
+    .title-head div{
+        padding-bottom: 5px;
+    }
+    .details{
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-bottom: 20px;
+    }
+    .d-item{
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .details p{
+        text-transform: capitalize;
+        margin: 0px;
+    }
+    .details h5{
+        display: inline-block;
+        font-size: 15px;
+        margin: 0px;
+    }
+    .progress{
+        height: 8px;
+        margin-bottom: 2px;
+    }
+    p{
+        margin-bottom: 0px;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="title-head">
+    <h2 style="display: inline-block;">{{ habit.name }}</h2>
+    {% if habit.status == "progressing" %}
+    <div>
+        <span class="badge bg-success">active</span>
+    </div>
+    {% elif habit.status == "failed" %}
+    <div>
+        <span class="badge bg-danger">failed</span>
+    </div>
+    {% elif habit.status == "achieved" %}
+    <div>
+        <span class="badge bg-secondary">achieved</span>
+    </div>
+    {% endif %}
+</div>
+<p class="text-muted">Created on: {{ habit.created_at|date:"M d, Y" }}</p>
+
+<div class="mt-3 mb-3">
+    <p>{{ habit.description }}</p>
+</div>
+<div class="details">
+    <div class="d-item">
+        <h5>Time of Day: </h5><p>{{ habit.time_of_day }}</p>
+    </div>
+    <div class="d-item">
+        {% if habit.frequency == 'daily' %}
+        <h5>Target/Day: </h5>
+        {% elif habit.frequency == 'Weekly' %}
+        <h5>Target/Week: </h5>
+        {% elif habit.frequency == 'custom' %}
+        <h5>Target/Custom Day: </h5>
+        {% endif %}
+        <p>{{ habit.target_per_day }} {{habit.unit.name}}</p>
+    </div>
+    <div class="d-item">
+        <h5>Start Date: </h5><p>{{ habit.start_date|date:"M d, Y" }}</p>
+    </div>
+    <div class="d-item">
+        <h5>End Date: </h5>
+        {% if habit.end_date == None %}
+        <p>Endless Habit</p>
+        {% else %}
+        <p>{{ habit.end_date|date:"M d, Y"}}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mb-3">
+    <a href="{% url 'habit:habit_edit' habit.id %}" class="btn btn-warning me-1">
+        <i class="fas fa-edit me-1"></i> Edit Habit
+    </a>
+    <a href="{% url 'habit:habit_delete' habit.id %}" class="btn btn-danger me-1">
+        <i class="fas fa-trash-alt me-1"></i> Delete Habit
+    </a>
+    {% if habit.status == "progressing" %}
+    <a href="{% url 'habit:log_add' habit.pk %}" class="btn btn-success">
+        <i class="fas fa-plus me-1"></i> Add Log
+    </a>
+    {% endif %}
+</div>
+
+<h4>Logs</h4>
+{% if habit.logs.all %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Completed</th>
+            <th>Progress</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in habit.logs.all %}
+        <tr>
+            <td>{{ log.date|date:"M d, Y" }}</td>
+            <td>{% if log.completed %}✅{% else %}❌{% endif %}</td>
+            <td>
+                <div class="progress">
+                    <div class="progress-bar" style="width: {{ log.completion_percentage }}%"></div>
+                </div>
+                <p>{{log.progress}}/{{habit.target_per_day}}  {{log.habit.unit.name}}</p>
+            </td>
+            <td>
+                {% if log.date == today %}
+                <a href="{% url 'habit:log_edit' log.id  %}" class="btn btn-warning me-1">
+                    <i class="fas fa-pen-to-square"></i>
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">No logs yet for this habit.</p>
+{% endif %}
+{% endblock %}

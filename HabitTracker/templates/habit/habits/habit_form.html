@@ -1,0 +1,28 @@
+{% extends "habit/base.html" %}
+{% block title %}{% if form.instance.pk %}Edit Habit{% else %}Add Habit{% endif %} - HabitTracker{% endblock %}
+
+{% block content %}
+<h2>{% if form.instance.pk %}Edit Habit{% else %}Add New Habit{% endif %}</h2>
+
+<form method="post" class="mt-3">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    
+    <div class="mb-3">
+        <label for="id_name" class="form-label">Name</label>
+        {{ form.name|add_class:"form-control" }}
+        {{ form.name.errors }}
+    </div>
+    
+    <div class="mb-3">
+        <label for="id_description" class="form-label">Description</label>
+        {{ form.description|add_class:"form-control" }}
+        {{ form.description.errors }}
+    </div>
+    
+    <button type="submit" class="btn btn-success">
+        {% if form.instance.pk %}Update Habit{% else %}Create Habit{% endif %}
+    </button>
+    <a href="{% url 'habit:habit_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

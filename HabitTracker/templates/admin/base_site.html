@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}🌱 Habit Tracker Admin | {{ title }}{% endblock %}
+
+{% block extrahead %}
+<link rel="icon" href="{% static 'images/favicon.ico' %}" sizes="32x32">
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        🌱 Habit Tracker Administration
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}
+<div class="nav-global">
+    <div style="display: flex; justify-content: center; gap: 2rem;">
+        <span>📊 Track Habits</span>
+        <span>🏆 Challenges</span>
+        <span>👥 Community</span>
+        <span>🎁 Rewards</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block welcome-msg %}
+    Welcome, <strong>{% firstof user.get_short_name user.get_username %}</strong>!
+{% endblock %}
+
+{% block userlinks %}
+    {% if site_url %}
+        <a href="{{ site_url }}">View Site</a> /
+    {% endif %}
+    {% if user.has_usable_password %}
+        <a href="{% url 'admin:password_change' %}">Change Password</a> /
+    {% endif %}
+    <a href="{% url 'admin:logout' %}">Log out</a>
+{% endblock %}

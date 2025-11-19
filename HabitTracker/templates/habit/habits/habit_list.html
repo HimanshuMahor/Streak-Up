@@ -1,0 +1,111 @@
+{% extends "habit/base.html" %}
+{% block title %}My Habits - HabitTracker{% endblock %}
+
+{% block extra_head %}
+
+<style>
+    .card-head{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .card-head span{
+        padding: 5px 10px;
+    }
+    .card-head h5{
+        margin-bottom: 0px;
+    }
+    .card-title{
+        display: inline-block;
+    }
+    .sub-nav{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .filter-nav{
+        display: flex;
+        align-items: center;
+        padding: 15px 5px;
+        border-bottom: 2px solid rgba(var(--bs-primary-rgb), var(--bs-bg-opacity));
+        font-weight: 500;
+        gap: 30px;
+    }
+    .active{
+        color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity));
+    }
+    .sub-link:hover{
+        color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity));
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">My Habits</h2>
+
+<div class="sub-nav">
+    <div class="filter-nav">
+        <div class="nav-item">
+            <a class="{% if filter == 'all' %}active{% endif %} sub-link nav-link" href="{% url 'habit:habit_filter' 'all' %}">All</a>
+        </div>
+        <div class="nav-item">
+            <a class="{% if filter == 'active' %}active{% endif %} sub-link nav-link" href="{% url 'habit:habit_filter' 'active' %}">Active</a>
+        </div>
+        <div class="nav-item">
+            <a class="{% if filter == 'failed' %}active{% endif %} sub-link nav-link" href="{% url 'habit:habit_filter' 'failed' %}">Failed</a>
+        </div>
+        <div class="nav-item">
+            <a class="{% if filter == 'achieved' %}active{% endif %} sub-link nav-link" href="{% url 'habit:habit_filter' 'achieved' %}">Achieved</a>
+        </div>
+    </div>
+    
+    <div class="d-flex justify-content-end gap-2">
+        <a href="{% url 'habit:log_list' %}" class="btn btn-warning">
+            <i class="fas fa-infinity me-1"></i> Logs
+        </a>
+        <a href="{% url 'habit:habit_add' %}" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i> Add New Habit
+        </a>
+    </div>
+</div>
+
+{% if habits %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for habit in habits %}
+    <div class="col">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="card-head">
+                    <h5 class="card-title">{{ habit.name }}</h5>
+                    {% if habit.status == "progressing" %}
+                    <span class="badge bg-success">active</span>
+                    {% elif habit.status == "failed" %}
+                    <span class="badge bg-danger">failed</span>
+                    {% elif habit.status == "achieved" %}
+                    <span class="badge bg-secondary">achieved</span>
+                    {% endif %}
+                </div>
+                <p class="card-text">{{ habit.description|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a href="{% url 'habit:habit_detail' habit.id %}" class="btn btn-primary btn-sm">
+                    View
+                </a>
+                <a href="{% url 'habit:habit_edit' habit.id %}" class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+                <a href="{% url 'habit:habit_delete' habit.id %}" class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">You don’t have any habits yet. <a href="{% url 'habit:habit_create' %}">Create one now!</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "habit/base.html" %}
+{% block title %}Challenges - HabitTracker{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Challenges</h2>
+
+<div class="d-flex justify-content-end mb-3">
+    <a href="{% url 'habit:challenge_create' %}" class="btn btn-success">
+        <i class="fas fa-plus me-1"></i> Add New Challenge
+    </a>
+</div>
+
+{% if all_challenges %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for challenge in all_challenges %}
+    <div class="col">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ challenge.title }}</h5>
+                <p class="card-text">{{ challenge.description|truncatewords:20 }}</p>
+                <p class="text-muted">Points: {{ challenge.points }}</p>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a href="{% url 'habit:challenge_detail' challenge.id %}" class="btn btn-primary btn-sm">
+                    View
+                </a>
+                <a href="{% url 'habit:challenge_edit' challenge.id %}" class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+                <a href="{% url 'habit:challenge_delete' challenge.id %}" class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">No challenges yet. <a href="{% url 'habit:challenge_create' %}">Create one now!</a></p>
+{% endif %}
+{% endblock %}

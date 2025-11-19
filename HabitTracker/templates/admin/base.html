@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block extrahead %}
+<script src="{% static 'js/admin_custom.js' %}" defer></script>
+{% endblock %}
+
+{% block footer %}
+{{ block.super }}
+<div style="text-align: center; padding: 10px; margin-top: 20px; border-top: 1px solid #eee;">
+    <small>Habit Tracker Admin v1.0 • Built with Django</small>
+</div>
+{% endblock %}

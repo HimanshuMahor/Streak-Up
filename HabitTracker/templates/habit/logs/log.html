@@ -1,0 +1,74 @@
+{% extends "habit/base.html" %}
+{% block title %}Habit Logs - HabitTracker{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="fas fa-book me-2"></i>Habit Logs</h1>
+    <a onclick="window.history.back()" class="btn btn-primary">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
+
+{% if logs %}
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Habit</th>
+                    <th>Time of Day</th>
+                    <th>Status</th>
+                    <th>Progress</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.date|date:"M j, Y" }}</td>
+                    <td>{{ log.find_day }}</td>
+                    <td>{{ log.habit.name }}</td>
+                    <td style="text-transform: capitalize;">{{ log.habit.time_of_day }}</td>
+                    <td>
+                        {% if log.status == "done" %}
+                        <span class="badge bg-success">Done</span>
+                        {% elif log.status == "missed" %}
+                        <span class="badge bg-danger">Missed</span>
+                        {% else %}
+                        <span class="badge bg-secondary">{{ log.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-info" role="progressbar" 
+                                style="width: {{ log.completion_percentage }}%" 
+                                aria-valuenow="{{ log.progress }}" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                        <small>{{ log.progress }} / {{ log.habit.target_per_day }}  {{log.habit.unit.name}}</small>
+                    </td>
+                    <td>
+                        {% if log.date == today %}
+                        <a href="{% url 'habit:log_edit' log.id  %}" class="btn btn-warning me-1">
+                            <i class="fas fa-pen-to-square"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-book fa-3x text-muted mb-3"></i>
+    <h4>No logs yet</h4>
+    <p class="text-muted">Start by adding your first habit log.</p>
+    <a href="{% url 'habit:log_add' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Add Log
+    </a>
+</div>
+{% endif %}
+{% endblock %}

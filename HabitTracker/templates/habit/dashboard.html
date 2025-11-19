@@ -1,0 +1,160 @@
+{% extends "habit/base.html" %}
+{% block extra_head %}
+
+<style>
+    .dashboard-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 mb-0">Dashboard</h1>
+            <a href="{% url 'habit:habit_add' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>New Habit
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ habits|length }}</div>
+        <div class="stat-label">Total Habits</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ user.points }}</div>
+        <div class="stat-label">Total Points</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ completed_habits_today }}</div>
+        <div class="stat-label">Completed Today</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ current_streak }}</div>
+        <div class="stat-label">Current Streak</div>
+    </div>
+</div>
+
+<!-- Active Habits -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">Your Active Habits</h3>
+        <span class="badge bg-primary">{{ active_habits_count }} active</span>
+    </div>
+    <div class="card-body">
+        {% if habits %}
+        <div class="row">
+            {% for habit in habits %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="dashboard-content card-body">
+                        <div>
+                            <h5 class="card-title">{{ habit.name }}</h5>
+                            <p class="card-text text-muted">{{ habit.description|truncatewords:20 }}</p>
+                        </div>
+                        
+                        <!-- Progress -->
+                        <div>
+                            {% for l in log %}
+                            <div class="mb-3">
+                                {% if l.habit == habit and l.date == today %}
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small>Progress: {{ l.progress }}/{{ habit.target_per_day }} {{l.unit.name}}</small>
+                                    <small>{{ l.completion_value }}%</small>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: {{ l.completion_percentage }}%"></div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+    
+                            <!-- Actions -->
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'habit:habit_detail' habit.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'habit:log_add' habit.pk %}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-plus"></i> Log
+                                </a>
+                                {% if habit.completed_today %}
+                                <span class="badge bg-success ms-auto">Completed</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-tasks fa-3x text-muted mb-3"></i>
+            <h4>No habits yet!</h4>
+            <p class="text-muted">Start by creating your first habit to track your progress.</p>
+            <a href="{% url 'habit:habit_add' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Create First Habit
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_logs %}
+                <div class="list-group">
+                    {% for log in recent_logs %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ log.habit.name }}</strong>
+                            <span class="badge bg-{% if log.completed %}success{% else %}warning{% endif %}">
+                                {{ log.progress }}/{{ log.habit.target_per_day }}
+                            </span>
+                        </div>
+                        <small class="text-muted">{{ log.date }} • {{ log.get_status_display }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No recent activity</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'habit:habit_add' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add New Habit
+                    </a>
+                    <a href="{% url 'habit:challenge_list' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-trophy me-2"></i>Join Challenge
+                    </a>
+                    <a href="{% url 'habit:friends' %}" class="btn btn-outline-success">
+                        <i class="fas fa-users me-2"></i>Invite Friends
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
